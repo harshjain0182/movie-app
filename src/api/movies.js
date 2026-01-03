@@ -1,14 +1,30 @@
 import axios from 'axios';
-import { setMovies } from '../slice/movieSlice';
+import { setMovies, setSearchValue } from '../slice/movieSlice';
+
+const BaseUrl = "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
 
 export const getMovies = () => async dispatch => {
-    const url = "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
 
     try{
-        const {data}= await axios.get(url);
+        const {data}= await axios.get(BaseUrl);
         dispatch(setMovies(data));
     }
     catch(err){
         console.log("Not able to fetch data", err);
+    }
+}
+
+export const getMoviesBySearch = (value) => async dispatch =>{
+    const url = BaseUrl + "/search"
+
+    try{
+        const {data} = await axios.get(url,{
+            params : {
+                search : value
+            }
+        });
+        dispatch(setMovies(data));
+    } catch(err){
+        return err;
     }
 }
