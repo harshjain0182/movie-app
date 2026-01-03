@@ -18,7 +18,7 @@ export default function MovieCard({ movie }) {
                 <CardMedia
                     sx={{ height: 200 }}
                     image={movie.img_link}
-                    title={movie.name}
+                    alt={movie.name}
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="div">
