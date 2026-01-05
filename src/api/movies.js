@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { setMovies, setGenres } from '../slice/movieSlice';
-import { UNSAFE_DataRouterStateContext } from 'react-router-dom';
+import { setMovies, setGenres, setRatings } from '../slice/movieSlice';
+import { useDispatch as dispatch} from 'react-redux';
 
 const BaseUrl = "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
 
@@ -55,4 +55,30 @@ export const getMovieByGenre = (value) => async dispatch => {
         return err;
     }
 
+}
+
+export const getAllRating = () => async dispatch => {
+    const url = BaseUrl + '/ratings';
+    try{
+        const {data} = await axios.get(url);
+        dispatch(setRatings(data));
+    }
+    catch (err) {
+        return err;
+    }
+}
+export const getMoviesByRating = (value) => async dispatch => {
+    const url = BaseUrl + '/rating';
+
+    try{
+        const {data} = await axios.get(url, {
+            params : {
+                rating: value
+            }
+        });
+        dispatch(setMovies(data));
+    }
+    catch (err) {
+        return err;
+    }
 }
