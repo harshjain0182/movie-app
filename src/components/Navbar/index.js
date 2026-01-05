@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SelectorComponent from '../Selector';
 import { useDispatch, useSelector } from 'react-redux';
 // import { setSearchValue } from '../../slice/movieSlice';
-import { getALlGenres, getMoviesBySearch } from '../../api/movies';
+import { getALlGenres, getMoviesByRating, getMoviesBySearch, getAllRating } from '../../api/movies';
 import {debounce} from '@mui/material';
 import { useEffect } from 'react';
 
@@ -51,11 +51,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Navbar() {
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(getALlGenres());
+    // dispatch(getAllRating());
   }, []);
-
-  const {genres} = useSelector(state => state.movies);
+  useEffect(() => {
+    dispatch(getAllRating());
+  }, []);
+  const {genres,ratings} = useSelector(state => state.movies);
   
 
   const onSearchChange = debounce((e) => {
@@ -86,7 +90,7 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <SelectorComponent name= 'Genres' value={genres}/>
-            <SelectorComponent name='Rating' value={[]}/>
+            <SelectorComponent name='Rating' value={ratings}/>
           </Box>
         </Toolbar>
       </AppBar>
