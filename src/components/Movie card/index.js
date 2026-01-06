@@ -5,17 +5,40 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Grid, IconButton } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFavorites, removeFromFavorites } from '../../slice/movieSlice';
 
 export default function MovieCard({ movie }) {
+
+    const dispatch = useDispatch();
+    const {favorites} = useSelector(state => state.movies);
+    const isFavorite = favorites.some(m => m.id === movie.id);
+
+    const handleFavoriteClick = () => {
+        if(isFavorite) {
+            dispatch(removeFromFavorites(movie.id))
+        }
+        else{
+            dispatch(addToFavorites(movie));
+        }
+    }
+
     return (
-        <Grid item xs={12}>
+        <Grid item xs={4} mx={5}>
             <Card sx={{
+
                 height: "100%",
+                width: "25vw",
                 display: "flex",
-                flexDirection: "column"
+                flexDirection: "column",
+                backgroundColor: '#1a1a1a',  // Modern dark background
+                color: '#ffffff',  // White text color inheritance
+                border: '2px solid',           // Enables border
+                borderColor: '#333333ff',        // Subtle gray border
+                borderRadius: 2
             }}>
                 <CardMedia
-                    sx={{ height: 200 }}
+                    sx={{ height: 200, width: "100%", objectFit: "contain" }}
                     image={movie.img_link}
                     alt={movie.name}
                 />
@@ -34,8 +57,10 @@ export default function MovieCard({ movie }) {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
+                    <IconButton aria-label="add to favorites" onClick={handleFavoriteClick}>
+                        <FavoriteIcon 
+                            sx={{color: isFavorite ? 'red' : 'white'}}
+                        />
                     </IconButton>
                     <Typography gutterBottom variant="h7" component="div">
                         {movie.duration_in_mins} mins

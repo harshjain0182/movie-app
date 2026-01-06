@@ -12,16 +12,21 @@ const Home = () => {
 
     const { movies, searchState } = useSelector(state => state.movies)
     // const filterdMovies = getSearchedMovies(movies, searchState);
-    
+
 
     useEffect(() => {
         dispatch(getMovies());
     }, []);
 
     return (
-        <>
+        <div className="app">
             <Navbar />
-            <Box sx={{ flexGrow: 1, marginTop: 2 }}>
+            <Box sx={{
+                minHeight: '100vh',
+                backgroundColor: '#1a1a1a',
+                color: 'white',
+                padding: 2
+            }}>
                 <Grid container spacing={2}>
                     {
                         movies.length > 0 && movies.map(movie => <MovieCard key={movie.id} movie={movie} />)
@@ -29,7 +34,7 @@ const Home = () => {
 
                 </Grid>
             </Box>
-        </>
+        </div>
     )
 }
 
