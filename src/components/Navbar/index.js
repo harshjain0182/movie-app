@@ -2,11 +2,13 @@ import { styled, alpha } from '@mui/material/styles';
 import { AppBar, Box, Toolbar, Typography, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SelectorComponent from '../Selector';
+import { IconButton } from "@mui/material"
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from 'react-redux';
-// import { setSearchValue } from '../../slice/movieSlice';
-import { getALlGenres, getMoviesByRating, getMoviesBySearch, getAllRating } from '../../api/movies';
-import {debounce} from '@mui/material';
+import { getALlGenres, getMoviesBySearch, getAllRating } from '../../api/movies';
+import { debounce } from '@mui/material';
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -54,22 +56,19 @@ export default function Navbar() {
 
   useEffect(() => {
     dispatch(getALlGenres());
-    // dispatch(getAllRating());
-  }, []);
-  useEffect(() => {
     dispatch(getAllRating());
   }, []);
-  const {genres,ratings} = useSelector(state => state.movies);
-  
+  const { genres, ratings } = useSelector(state => state.movies);
+
 
   const onSearchChange = debounce((e) => {
     dispatch(getMoviesBySearch(e.target.value));
   }, 500);
-  
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{padding : 1.5}}>
-        <Toolbar>
+      <AppBar position="static" sx={{ padding: 1.5 }}>
+        <Toolbar >
           <Typography
             variant="h6"
             noWrap
@@ -88,9 +87,15 @@ export default function Navbar() {
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <SelectorComponent name= 'Genres' value={genres}/>
-            <SelectorComponent name='Rating' value={ratings}/>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+
+            <SelectorComponent name='Genres' value={genres} />
+            <SelectorComponent name='Rating' value={ratings} />
+            <Link to={"/favorites"} style={{textDecoration: "none"}} >
+              <IconButton aria-label="add to favorites" sx={{ color: "#ef2424ff" }}>
+                <FavoriteIcon />
+              </IconButton>
+            </Link>
           </Box>
         </Toolbar>
       </AppBar>

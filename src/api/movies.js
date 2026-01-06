@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { setMovies, setGenres, setRatings } from '../slice/movieSlice';
-import { useDispatch as dispatch} from 'react-redux';
 
 const BaseUrl = "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
 
@@ -18,6 +17,10 @@ export const getMovies = () => async dispatch => {
 export const getMoviesBySearch = (value) => async dispatch => {
     const url = BaseUrl + "/search"
 
+    if (!value || value.trim() === "") {
+        dispatch(getMovies());
+        return;
+    }
     try {
         const { data } = await axios.get(url, {
             params: {
