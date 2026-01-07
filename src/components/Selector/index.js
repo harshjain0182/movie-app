@@ -1,28 +1,20 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { useDispatch } from 'react-redux';
-import { getMovieByGenre, getMoviesByRating } from '../../api/movies';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from '../../slice/movieSlice';
 
-export default function SelectorComponent({name, value}) {
-
-  const [selectedValue, setSelectedValue] = useState('');
+export default function SelectorComponent({name, value, filterKey}) {
 
   const dispatch = useDispatch();
-  
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-    if(name.toLowerCase().includes('genres')) {
-      dispatch(getMovieByGenre(event.target.value));
-    } else {
-      dispatch(getMoviesByRating(event.target.value));
-    }
+  const selectedValue = useSelector(state => state.movies.filters[filterKey]);
+
+  const handleChange = (e) => {
+    dispatch(setFilter({key: filterKey, value: e.target.value}));
   };
   
-
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -33,19 +25,15 @@ export default function SelectorComponent({name, value}) {
         <Select
           labelId={`selector-${name}-label`}
           id={`selector-${name}-select`}
-          value={selectedValue}
           label={name}
           onChange={handleChange}
         >
-          {
-            (value || []).length > 0 && (value || []).map((item, idx) => {
-              let display = item;
-              if (item && typeof item === 'object') {
-                display = item.genre ?? item.ratings ?? item.rating ?? item.name ?? JSON.stringify(item);
-              }
-              return <MenuItem key={idx} value={display}>{display}</MenuItem>
-            })
-          }
+          <MenuItem value="">All</MenuItem>
+          {value.map((item, index) => (
+            <MenuItem key={index} value={item}>
+              {item}
+            </MenuItem>
+          ))}
 
         </Select>
       </FormControl>

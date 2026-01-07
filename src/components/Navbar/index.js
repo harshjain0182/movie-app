@@ -5,10 +5,9 @@ import SelectorComponent from '../Selector';
 import { IconButton } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from 'react-redux';
-import { getALlGenres, getMoviesBySearch, getAllRating } from '../../api/movies';
 import { debounce } from '@mui/material';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { setFilter } from '../../slice/movieSlice';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -54,15 +53,11 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getALlGenres());
-    dispatch(getAllRating());
-  }, []);
   const { genres, ratings } = useSelector(state => state.movies);
 
 
   const onSearchChange = debounce((e) => {
-    dispatch(getMoviesBySearch(e.target.value));
+    dispatch(setFilter({key: 'search', value: e.target.value}));
   }, 500);
 
   return (
@@ -89,9 +84,10 @@ export default function Navbar() {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
 
-            <SelectorComponent name='Genres' value={genres} />
-            <SelectorComponent name='Rating' value={ratings} />
-            <Link to={"/favorites"} style={{textDecoration: "none"}} >
+            <SelectorComponent name='Genres' value={genres} filterKey="genre" />
+            <SelectorComponent name='Rating' value={ratings} filterKey="rating" />
+
+            <Link to={"/favorites"} style={{ textDecoration: "none" }} >
               <IconButton aria-label="add to favorites" sx={{ color: "#ef2424ff" }}>
                 <FavoriteIcon />
               </IconButton>
