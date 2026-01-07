@@ -6,6 +6,11 @@ const initialState = {
     genres: [],
     ratings: [],
     favorites: [],
+    filters: {
+        search: '',
+        genre: '',
+        rating: ''
+    }
 }
 
 const movieSlice = createSlice({
@@ -15,14 +20,15 @@ const movieSlice = createSlice({
         setMovies : (state, action) => {
             state.movies = action.payload;
         },
-        setSearchValue : (state, action) =>  {
-            state.searchState = action.payload;
-        },
         setGenres : (state, action) => {
             state.genres = action.payload;
         },
         setRatings : (state, action) => {
             state.ratings = action.payload;
+        },
+        setFilter: (state, action) => {
+            const {key, value} = action.payload;
+            state.filters[key] = value;
         },
         addToFavorites : (state, action) => {
             state.favorites.push(action.payload);
@@ -33,6 +39,6 @@ const movieSlice = createSlice({
     }
 });
 
-export const {setMovies, setSearchValue, setGenres, setRatings, addToFavorites, removeFromFavorites} = movieSlice.actions;
+export const {setMovies, setGenres, setRatings, addToFavorites, removeFromFavorites, setFilter} = movieSlice.actions;
 
 export default movieSlice.reducer;

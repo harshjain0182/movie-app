@@ -1,87 +1,28 @@
-import axios from 'axios';
-import { setMovies, setGenres, setRatings } from '../slice/movieSlice';
+import axios from "axios";
+import { setMovies, setGenres, setRatings } from "../slice/movieSlice";
 
-const BaseUrl = "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
+const BASE_URL =
+  "https://83b05cfb-e74c-49f8-8ed4-09abdf015696-00-2mn4a00imlo4f.pike.replit.dev:3000/api/movies";
 
-export const getMovies = () => async dispatch => {
+// 🔥 ONE API FOR MOVIES (WITH FILTERS)
+export const fetchMovies = (filters) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(BASE_URL, {
+      params: filters
+    });
+    dispatch(setMovies(data));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-    try {
-        const { data } = await axios.get(BaseUrl);
-        dispatch(setMovies(data));
-    }
-    catch (err) {
-        return err;
-    }
-}
+// 🔹 helpers
+export const getAllGenres = () => async (dispatch) => {
+  const { data } = await axios.get(`${BASE_URL}/genres`);
+  dispatch(setGenres(data));
+};
 
-export const getMoviesBySearch = (value) => async dispatch => {
-    const url = BaseUrl + "/search"
-
-    if (!value || value.trim() === "") {
-        dispatch(getMovies());
-        return;
-    }
-    try {
-        const { data } = await axios.get(url, {
-            params: {
-                search: value
-            }
-        });
-        dispatch(setMovies(data));
-    } catch (err) {
-        return err;
-    }
-}
-
-export const getALlGenres = () => async dispatch => {
-    const url = BaseUrl + '/genres'
-    try {
-        const { data } = await axios.get(url);
-        dispatch(setGenres(data));
-    }
-    catch (err) {
-        return err;
-    }
-}
-
-export const getMovieByGenre = (value) => async dispatch => {
-    const url = BaseUrl + '/genre';
-
-    try {
-        const { data } = await axios.get(url, {
-            params: {
-                genre: value
-            }
-        });
-        dispatch(setMovies(data));
-    } catch (err) {
-        return err;
-    }
-
-}
-
-export const getAllRating = () => async dispatch => {
-    const url = BaseUrl + '/ratings';
-    try{
-        const {data} = await axios.get(url);
-        dispatch(setRatings(data));
-    }
-    catch (err) {
-        return err;
-    }
-}
-export const getMoviesByRating = (value) => async dispatch => {
-    const url = BaseUrl + '/rating';
-
-    try{
-        const {data} = await axios.get(url, {
-            params : {
-                rating: value
-            }
-        });
-        dispatch(setMovies(data));
-    }
-    catch (err) {
-        return err;
-    }
-}
+export const getAllRatings = () => async (dispatch) => {
+  const { data } = await axios.get(`${BASE_URL}/ratings`);
+  dispatch(setRatings(data));
+};
